@@ -1,0 +1,2 @@
+[submodule "repos/avr-quantizer"]
+	url = https://github.com/nqtronix/avr-quantizer
