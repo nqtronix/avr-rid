@@ -8,6 +8,7 @@
 #include <avr/io.h>
 
 #include "rid.h"
+#include "repos/avr-tinyuart/tinyuart.h"
 
 int main(void)
 {
