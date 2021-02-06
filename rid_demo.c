@@ -13,6 +13,9 @@
 #include "rid.h"
 #include "repos/avr-tinyuart/tinyuart.h"
 
+//////////////////////////////////////////////////////////////////////////
+// Struct & Typedef
+//////////////////////////////////////////////////////////////////////////
 
 typedef union
 {
@@ -20,6 +23,19 @@ typedef union
 	uint16_t u16[1];
 	uint8_t u8[2];
 } uint16_u;
+
+
+//////////////////////////////////////////////////////////////////////////
+// Function Declarations
+//////////////////////////////////////////////////////////////////////////
+
+// returns right adjusted 10b value from the adc
+static uint16_t adc_get(uint8_t admux);
+
+
+//////////////////////////////////////////////////////////////////////////
+// Functions
+//////////////////////////////////////////////////////////////////////////
 
 int main(void)
 {
@@ -30,24 +46,12 @@ int main(void)
 	PORTB	= (1<<3)|(1<<4);	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
 								// PB4/ADC2 is continuous sampled input
 	
-	ADMUX	= (0b11<<MUX0);
-	for (uint8_t cnt=64; cnt != 0; cnt--)
-	{
-		ADCSRA	= (1<<ADEN)|(1<<ADSC)|(0b110<<ADPS0);		// div 64 -> 150kHz
-		while (ADCSRA & (1<<ADSC));							// wait for completion
-	}
+	uint16_t res_high = rid_res_high(adc_get(0b11<<MUX0), RID_REF_OHM);
 	
-	uint16_t adc_ref = ADC;
-	uint16_t res_high = rid_res_high(adc_ref, RID_REF_OHM);
-	
-	
-	ADMUX	= (0b10<<MUX0);	// PB4/ADC2 is continuous sampled input
     while (1) 
     {
-		ADCSRA	= (1<<ADEN)|(1<<ADSC)|(0b110<<ADPS0);		// div 64 -> 150kHz
-		while (ADCSRA & (1<<ADSC));
-		
-		uint16_t adc_val = ADC;
+		// PB4/ADC2 is continuous sampled input
+		uint16_t adc_val = adc_get(0b10<<MUX0);
 		uint16_t res_low = rid_res_low(adc_val, res_high);
 		
 		rid_e rid = rid_get(res_low);
@@ -71,3 +75,11 @@ int main(void)
     }
 }
 
+static uint16_t adc_get(uint8_t admux)
+{
+	ADMUX	= admux;
+	ADCSRA	= (1<<ADEN)|(1<<ADSC)|(0b110<<ADPS0);		// div 64 -> 150kHz
+	while (ADCSRA & (1<<ADSC));							// wait for completion
+			
+	return ADC;
+}
