@@ -55,9 +55,8 @@
         </DebugFile>
       </AAFDebugFiles>
     </AAFDebugger>
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
-    <avrtoolserialnumber>
-    </avrtoolserialnumber>
+    <avrtool>com.atmel.avrdbg.tool.avrdragon</avrtool>
+    <avrtoolserialnumber>00A200050668</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E9007</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_avrdragon>
       <ToolOptions>
@@ -70,8 +69,7 @@
       <ToolNumber>00A200050668</ToolNumber>
       <ToolName>AVR Dragon</ToolName>
     </com_atmel_avrdbg_tool_avrdragon>
-    <avrtoolinterface>
-    </avrtoolinterface>
+    <avrtoolinterface>ISP</avrtoolinterface>
     <avrtoolinterfaceclock>125000</avrtoolinterfaceclock>
     <com_atmel_avrdbg_tool_simulator>
       <ToolOptions xmlns="">
