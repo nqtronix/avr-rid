@@ -13,6 +13,19 @@
 #include "rid.h"
 #include "repos/avr-tinyuart/tinyuart.h"
 
+
+
+//////////////////////////////////////////////////////////////////////////
+// Device Setup
+//////////////////////////////////////////////////////////////////////////
+
+__fuse_t __fuse __attribute__((section (".fuse"))) =
+{
+	.low	= FUSE_SPIEN & /*FUSE_CKDIV8 &*/ FUSE_SUT0 & FUSE_CKSEL0,	// default w/ out 8x divider
+	.high	= HFUSE_DEFAULT,
+};
+
+
 //////////////////////////////////////////////////////////////////////////
 // Struct & Typedef
 //////////////////////////////////////////////////////////////////////////
@@ -39,10 +52,6 @@ static uint16_t adc_get(uint8_t admux);
 
 int main(void)
 {
-	// clear cpu prescaler
-	CLKPR	= (1<<CLKPCE);
-	CLKPR	= (0b0000<<CLKPS0);
-
 	PORTB	= (1<<3)|(1<<4);	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
 								// PB4/ADC2 is continuous sampled input
 	
