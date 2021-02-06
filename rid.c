@@ -55,7 +55,7 @@ uint16_t rid_res_low (uint16_t adc_val, uint16_t res_high_12b)
 	if (adc_val >= 1000)
 		return UINT16_MAX;
 	
-	uint32_t val = ((adc_val<<10)/(ADC_MAX_VALUE-adc_val))*res_high_12b;
+	uint32_t val = (((uint32_t)adc_val<<10)/(ADC_MAX_VALUE-adc_val))*res_high_12b;
 	
 	return val>>10;
 }
@@ -66,7 +66,7 @@ uint16_t rid_res_high (uint16_t adc_val, uint16_t res_low_12b)
 	if (adc_val <= 11)
 		return UINT16_MAX;
 	
-	uint32_t val = (((ADC_MAX_VALUE-adc_val)<<10)/adc_val)*res_low_12b;
+	uint32_t val = (((ADC_MAX_VALUE-(uint32_t)adc_val)<<10)/adc_val)*res_low_12b;
 	
 	return val>>10;
 }
