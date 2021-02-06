@@ -75,9 +75,9 @@ extern const __flash uint8_t lut16_rid[42];
 // and the measured ADC values are known
 // param:
 //	- adc_10b		adc value, must fit into 10 bit to guarantee arithmetic correctness
-//	- res_*			other resistance value, must fit into 12 bit
-uint16_t rid_res_low (uint16_t adc_10b, uint16_t res_high_12b);
-uint16_t rid_res_high (uint16_t adc_10b, uint16_t res_low_12b);
+//	- res_*			other resistance value, must fit into 14 bit
+uint16_t rid_res_low (uint16_t adc_10b, uint16_t res_high_14b);
+uint16_t rid_res_high (uint16_t adc_10b, uint16_t res_low_14b);
 
 // converts a resistor value into the respective ID
 // param:

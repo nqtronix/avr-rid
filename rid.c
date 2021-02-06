@@ -61,28 +61,29 @@ uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_low_
 // Functions
 //////////////////////////////////////////////////////////////////////////
 
-uint16_t rid_res_low (uint16_t adc_val, uint16_t res_high_12b)
+uint16_t rid_res_low (uint16_t adc_val, uint16_t res_high_14b)
 {
 	if (adc_val >= 1000)
 		return UINT16_MAX;
 	
-	//return ((((uint32_t)adc_val<<10)/(ADC_MAX_VALUE-adc_val))*res_high_12b)>>10;
+	//return ((((uint32_t)adc_val<<10)/(ADC_MAX_VALUE-adc_val))*res_high_14b)>>10;
 	
-	return rid_res(adc_val, ADC_MAX_VALUE-adc_val, res_high_12b);
+	return rid_res(adc_val, ADC_MAX_VALUE-adc_val, res_high_14b);
 }
 
-uint16_t rid_res_high (uint16_t adc_val, uint16_t res_low_12b)
+uint16_t rid_res_high (uint16_t adc_val, uint16_t res_low_14b)
 {
 	// prevent division through 0 edge case
 	if (adc_val <= 11)
 		return UINT16_MAX;
 
-	//return ((((ADC_MAX_VALUE-(uint32_t)adc_val)<<10)/adc_val)*res_low_12b)>>10;
+	//return ((((ADC_MAX_VALUE-(uint32_t)adc_val)<<10)/adc_val)*res_low_14b)>>10;
 	
-	return rid_res(ADC_MAX_VALUE-adc_val, adc_val, res_low_12b);
+	return rid_res(ADC_MAX_VALUE-adc_val, adc_val, res_low_14b);
 }
 
-uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_12b)
+uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_14b)
 {
-	return (((((uint32_t)dividend_10b)<<10)/divisor_10b)*res_12b)>>10;
+
+	return ((((uint32_t)dividend_10b*res_14b<<8)/divisor_10b))>>8;
 }
