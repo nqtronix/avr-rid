@@ -10,6 +10,7 @@
 #define RID_H_
 
 #include <avr/io.h>
+#include "avr-quantizer/quantizer.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Defines & Enums
@@ -60,9 +61,10 @@ typedef enum
 
 
 //////////////////////////////////////////////////////////////////////////
-// Struct & Typedef
+// Constants
 //////////////////////////////////////////////////////////////////////////
 
+extern const __flash uint8_t lut16_rid[42];
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -80,8 +82,17 @@ uint16_t rid_res_high (uint16_t adc_10b, uint16_t res_low_12b);
 // converts a resistor value into the respective ID
 // param:
 //	- res_scaled	resistance value, scaled down by 'RID_LUT_SCALE'
-rid_e rid_get (uint16_t res_scaled);
+inline rid_e rid_get (uint16_t res_scaled) __attribute__((always_inline));
 
+
+//////////////////////////////////////////////////////////////////////////
+// Inline Functions
+//////////////////////////////////////////////////////////////////////////
+
+inline rid_e rid_get (uint16_t res_scaled)
+{
+	return quantizer_uint16(lut16_rid, res_scaled);
+}
 
 
 #endif /* RID_H_ */

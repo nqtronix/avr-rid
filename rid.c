@@ -6,13 +6,17 @@
  */ 
 
 #include "rid.h"
-#include "avr-quantizer/quantizer.h"
+
+//////////////////////////////////////////////////////////////////////////
+// Defines & Enums
+//////////////////////////////////////////////////////////////////////////
+
+#define ADC_MAX_VALUE 1023
+
 
 //////////////////////////////////////////////////////////////////////////
 // Constants
 //////////////////////////////////////////////////////////////////////////
-
-#define ADC_MAX_VALUE 1023
 
 const __flash uint8_t lut16_rid[42] =
 {
@@ -69,10 +73,4 @@ uint16_t rid_res_high (uint16_t adc_val, uint16_t res_low_12b)
 	uint32_t val = (((ADC_MAX_VALUE-(uint32_t)adc_val)<<10)/adc_val)*res_low_12b;
 	
 	return val>>10;
-}
-
-// converts a resistor value into the respective ID
-rid_e rid_get (uint16_t res_scaled)
-{
-	return quantizer_uint16(lut16_rid, res_scaled);
 }
