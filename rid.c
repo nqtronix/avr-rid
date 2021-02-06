@@ -69,23 +69,20 @@ uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_low_
 
 uint16_t rid_res_low (uint16_t adc_val, uint16_t res_high_14b)
 {
-	if (adc_val >= 1000)
-		return UINT16_MAX;
-	
 	return rid_res(adc_val, ADC_MAX_VALUE-adc_val, res_high_14b);
 }
 
 uint16_t rid_res_high (uint16_t adc_val, uint16_t res_low_14b)
 {
-	// prevent division through 0 edge case
-	if (adc_val <= 11)
-		return UINT16_MAX;
-	
 	return rid_res(ADC_MAX_VALUE-adc_val, adc_val, res_low_14b);
 }
 
 uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_14b)
 {
+	// catch division by 0. This is possible, as the divisor is the adc value
+	if (divisor_10b == 0)
+		return UINT16_MAX;	
+	
 	// The initial formula is quite simple, but not efficiently calculated on a 8bit MCU without FPU
 	// 1) result = res_14b * (dividend_10b / divisor_10b)
 	
@@ -102,11 +99,15 @@ uint16_t rid_res (uint16_t dividend_10b, uint16_t divisor_10b, uint16_t res_14b)
 	// compiler is forced to insert a software implementation which will increase code size. Instead
 	// of shifting the value, it is much more effective to to access the 2 center bits of a uint32_t
 	// directly.
-
+	
 	uint32_u tmp;
 	tmp.u16m	= res_14b;
 	tmp.u		*= dividend_10b;
 	tmp.u		/= divisor_10b;
 	
+	// check overflow
+	if (tmp.u8[3] != 0)
+		return UINT16_MAX;
+		
 	return tmp.u16m;
 }
