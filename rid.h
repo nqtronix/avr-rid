@@ -25,38 +25,38 @@
 // a total of 32 IDs, starting at 0. Use the number or alternatively the name below
 typedef enum
 {
-	RID_SHORT,
-	RID_1K0,
-	RID_1K5,
-	RID_2K2,
-	RID_3K3,
-	RID_4K7,
-	RID_5K6,
-	RID_6K8,
-	RID_8K2,
-	RID_10K,
-	RID_12K,
-	RID_15K,
-	RID_18K,
-	RID_22K,
-	RID_27K,
-	RID_33K,
-	RID_39K,
-	RID_47K,
-	RID_56K,
-	RID_68K,
-	RID_82K,
-	RID_100K,
-	RID_120K,
-	RID_150K,
-	RID_180K,
-	RID_220K,
-	RID_270K,
-	RID_330K,
-	RID_470K,
-	RID_680K,
-	RID_1000K,
-	RID_OPEN,
+	RID_SHORT	= 0x00,		// 0
+	RID_1K0		= 0x01,		// 1
+	RID_1K5		= 0x02,		// 2
+	RID_2K2		= 0x03,		// 3
+	RID_3K3		= 0x04,		// 4
+	RID_4K7		= 0x05,		// 5
+	RID_5K6		= 0x06,		// 6
+	RID_6K8		= 0x07,		// 7
+	RID_8K2		= 0x08,		// 8
+	RID_10K		= 0x09,		// 9
+	RID_12K		= 0x0A,		// 10
+	RID_15K		= 0x0B,		// 11
+	RID_18K		= 0x0C,		// 12
+	RID_22K		= 0x0D,		// 13
+	RID_27K		= 0x0E,		// 14
+	RID_33K		= 0x0F,		// 15
+	RID_39K		= 0x10,		// 16
+	RID_47K		= 0x11,		// 17
+	RID_56K		= 0x12,		// 18
+	RID_68K		= 0x13,		// 19
+	RID_82K		= 0x14,		// 20
+	RID_100K	= 0x15,		// 21
+	RID_120K	= 0x16,		// 22
+	RID_150K	= 0x17,		// 23
+	RID_180K	= 0x18,		// 24
+	RID_220K	= 0x19,		// 25
+	RID_270K	= 0x1A,		// 26
+	RID_330K	= 0x1B,		// 27
+	RID_470K	= 0x1C,		// 28
+	RID_680K	= 0x1D,		// 29
+	RID_1000K	= 0x1E,		// 30
+	RID_OPEN	= 0x1F,		// 31
 } rid_e;
 
 
