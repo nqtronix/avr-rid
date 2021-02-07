@@ -13,6 +13,12 @@
 #include "rid.h"
 #include "repos/avr-tinyuart/tinyuart.h"
 
+//////////////////////////////////////////////////////////////////////////
+// User Config
+//////////////////////////////////////////////////////////////////////////
+
+// enable raw data output of some internal values for debug
+//#define RID_OPT_DBG_RAW_OUTPUT
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,18 +71,20 @@ int main(void)
 		
 		rid_e rid = rid_get(res_low);
 		
-		// demo code: output intermediary values
-// 		uint16_u adc = (uint16_u)adc_val;
-// 		uint16_u out = (uint16_u)res_low;
-// 		
-// 		tinyuart_send_uint8(adc.u8[1]);
-// 		_delay_us(30);
-// 		tinyuart_send_uint8(adc.u8[0]);
-// 		_delay_us(100);
-// 		tinyuart_send_uint8(out.u8[1]);
-// 		_delay_us(30);
-// 		tinyuart_send_uint8(out.u8[0]);
-// 		_delay_us(100);
+		// demo code: output intermediary values; use this to measure 
+		#ifdef RID_OPT_DBG_RAW_OUTPUT
+			uint16_u adc = (uint16_u)adc_val;
+			uint16_u out = (uint16_u)res_low;
+			
+			tinyuart_send_uint8(adc.u8[1]);
+			_delay_us(30);
+			tinyuart_send_uint8(adc.u8[0]);
+			_delay_us(100);
+			tinyuart_send_uint8(out.u8[1]);
+			_delay_us(30);
+			tinyuart_send_uint8(out.u8[0]);
+			_delay_us(100);
+		#endif
 		
 		// demo code: output result
 		tinyuart_send_uint8(rid);

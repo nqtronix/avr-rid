@@ -20,7 +20,18 @@
 // to store "large" values in a uint16_t
 #define RID_LUT_SCALE	5
 
-#define RID_REF_OHM		(22000>>RID_LUT_SCALE)
+// define the external dull-down reference resistor value, scaled to match the LUT
+#define RID_REF_OHM			(22000>>RID_LUT_SCALE)
+
+// define the parasitic internal series resistor between ADC input and device output. Set to 0 if
+// an external voltage divider is used (internal pullup disabled).
+// This parasitic resistance is not specified or even mentioned in the datasheet, but can be measured indirectly by enabeling the
+// internal pullup, shorting the pin externally to ground, reading the ADC value and calculating
+// the apparent resistance value. On the device I used (attiny13a) it was 128-352 Ohms, chosen
+// calibration value delivered consistent results in experiments.
+// Do not confuse this with the ADC offset error, if an external 0V is applied without the internal
+// pullup the reading is correct. 
+#define RID_PARASITIC_OHM	(320>>RID_LUT_SCALE)
 
 // a total of 32 IDs, starting at 0. Use the number or alternatively the name below
 typedef enum
@@ -91,7 +102,10 @@ inline rid_e rid_get (uint16_t res_scaled) __attribute__((always_inline));
 
 inline rid_e rid_get (uint16_t res_scaled)
 {
-	return quantizer_uint16(lut16_rid, res_scaled);
+	if (res_scaled < RID_PARASITIC_OHM)
+		return 0;
+	
+	return quantizer_uint16(lut16_rid, res_scaled-RID_PARASITIC_OHM);
 }
 
 
