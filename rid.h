@@ -12,16 +12,13 @@
 #include <avr/io.h>
 #include "avr-quantizer/quantizer.h"
 
-//////////////////////////////////////////////////////////////////////////
-// Defines & Enums
-//////////////////////////////////////////////////////////////////////////
 
-// all resistor values for the functions are shifted 5 bits to the right (= divided by 32) in order
-// to store "large" values in a uint16_t
-#define RID_LUT_SCALE	5
+//////////////////////////////////////////////////////////////////////////
+// User Config
+//////////////////////////////////////////////////////////////////////////
 
 // define the external dull-down reference resistor value, scaled to match the LUT
-#define RID_REF_OHM			(22000>>RID_LUT_SCALE)
+#define RID_REF_OHM			(22000)
 
 // define the parasitic internal series resistor between ADC input and device output. Set to 0 if
 // an external voltage divider is used (internal pullup disabled).
@@ -30,8 +27,21 @@
 // the apparent resistance value. On the device I used (attiny13a) it was 128-352 Ohms, chosen
 // calibration value delivered consistent results in experiments.
 // Do not confuse this with the ADC offset error, if an external 0V is applied without the internal
-// pullup the reading is correct. 
-#define RID_PARASITIC_OHM	(320>>RID_LUT_SCALE)
+// pullup the reading is correct.
+#define RID_PARASITIC_OHM	(320)
+
+
+//////////////////////////////////////////////////////////////////////////
+// Defines & Enums
+//////////////////////////////////////////////////////////////////////////
+
+// all resistor values for the functions are shifted 5 bits to the right (= divided by 32) in order
+// to store "large" values in a uint16_t
+#define RID_LUT_SCALE	5
+
+// resistor values adjusted to the included LUT
+#define RID_REF				((RID_REF_OHM+RID_PARASITIC_OHM)>>RID_LUT_SCALE)
+#define RID_PARASITIC		(RID_PARASITIC_OHM>>RID_LUT_SCALE)
 
 // a total of 32 IDs, starting at 0. Use the number or alternatively the name below
 typedef enum
@@ -102,10 +112,10 @@ inline rid_e rid_get (uint16_t res_scaled) __attribute__((always_inline));
 
 inline rid_e rid_get (uint16_t res_scaled)
 {
-	if (res_scaled < RID_PARASITIC_OHM)
+	if (res_scaled < RID_PARASITIC)
 		return 0;
 	
-	return quantizer_uint16(lut16_rid, res_scaled-RID_PARASITIC_OHM);
+	return quantizer_uint16(lut16_rid, res_scaled-RID_PARASITIC);
 }
 
 

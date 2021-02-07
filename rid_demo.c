@@ -60,7 +60,7 @@ int main(void)
 {
 	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
 	uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
-	uint16_t res_high = rid_res_high(adc_ref, RID_REF_OHM);
+	uint16_t res_high = rid_res_high(adc_ref, RID_REF);
 	
     while (1) 
     {
