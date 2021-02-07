@@ -49,7 +49,7 @@ typedef union
 //////////////////////////////////////////////////////////////////////////
 
 // returns right adjusted 10b value from the adc
-static uint16_t adc_get(uint8_t admux);
+static uint16_t adc_get(uint8_t admux, uint8_t pinb);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,15 +58,15 @@ static uint16_t adc_get(uint8_t admux);
 
 int main(void)
 {
-	PORTB	= (1<<3)|(1<<4);	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
-								// PB4/ADC2 is continuous sampled input
-	
-	uint16_t res_high = rid_res_high(adc_get(0b11<<MUX0), RID_REF_OHM);
+	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
+	uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
+	uint16_t res_high = rid_res_high(adc_ref, RID_REF_OHM);
 	
     while (1) 
     {
 		// PB4/ADC2 is continuous sampled input
-		uint16_t adc_val = adc_get(0b10<<MUX0);
+		// PB4/ADC2 is continuous sampled input
+		uint16_t adc_val = adc_get(0b10<<MUX0, 1<<4);
 		uint16_t res_low = rid_res_low(adc_val, res_high);
 		
 		rid_e rid = rid_get(res_low);
@@ -92,11 +92,13 @@ int main(void)
     }
 }
 
-static uint16_t adc_get(uint8_t admux)
+static uint16_t adc_get(uint8_t admux, uint8_t pinb)
 {
+	PINB	= pinb;
 	ADMUX	= admux;
 	ADCSRA	= (1<<ADEN)|(1<<ADSC)|(0b110<<ADPS0);		// div 64 -> 150kHz
 	while (ADCSRA & (1<<ADSC));							// wait for completion
+	PINB	= pinb;
 			
 	return ADC;
 }
