@@ -65,7 +65,6 @@ int main(void)
     while (1) 
     {
 		// PB4/ADC2 is continuous sampled input
-		// PB4/ADC2 is continuous sampled input
 		uint16_t adc_val = adc_get(0b10<<MUX0, 1<<4);
 		uint16_t res_low = rid_res_low(adc_val, res_high);
 		
