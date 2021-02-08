@@ -61,7 +61,7 @@ Because the ADC hardware varies quite a bit between parts, **avr-rid** only cont
 ```c
 int main(void)
 {
-	// enable pull-up resistor and get 10 bit adc value of refrence
+	// enable pull-up resistor and get 10 bit adc value of reference
 	uint16_t adc_ref  = adc_get(0b11<<MUX0, 1<<3);
 	
 	// calculate internal pull-up resistor value as a reference
@@ -113,8 +113,11 @@ This section is written especially for everyone who is **not familiar** with the
 
 ## Documentation
 
-Table of all rid to reistor value assignments:
+The matching threshold values are generated with the included excel file. Note that the error over temperature is asymmetric, the internal resistance value increases if the chip gets hotter or colder. The second excel files proves that the value bins have enough margin between them to account for the ADC error.
 
+Table of all valid resistor to rid assignments:
+
+```
 | rid | resistor 1% |
 | --- | ------- |
 |   0 |   SHORT |
@@ -149,16 +152,15 @@ Table of all rid to reistor value assignments:
 |  29 |  680000 |
 |  30 | 1000000 |
 |  31 |    OPEN |
-
-The matching threshold values are generated with the included excel file. Note that the error over temperature is unsymetric, the internal resistance value increases if the chip gets hotter or colder. The second excel files proves that the value bins have enough margin between them to account for the ADC error.
+```
 
 <br>
 
 ## Under the Hood
 
-There is not much esciting code in this project, the main  challange was to come up with some a light-weight algorithm which does not add much error to the crude measurements. Because calibration is required, a simple LUT to convert ADC values into rids is not possible and more run-time math must be used instead.
+There is not much exciting code in this project, the main  challenge was to come up with some a light-weight algorithm which does not add much error to the crude measurements. Because calibration is required, a simple LUT to convert ADC values into rids is not possible and additional run-time math must be used.
 
-This calculation includes a division with a result of ≈1, so floating point calculation would be suited best. However this is not a viable option for the targeted devices, a custom floating point implementation had to be used to save space. Further improvements were made by replacing bulky shift instructions with accessing the next byte in memory directly. See comment in the source code for more details.
+This calculation includes a division with a result of ≈1, so floating point calculation would be suited best. This is not a viable option for the targeted devices, therefore a custom fix point implementation was used to save space. Further improvements were made by replacing bulky shift instructions with accessing the next byte in memory directly. See comments in the source code for more details.
 
 <br>
 
