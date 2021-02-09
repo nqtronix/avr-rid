@@ -8,6 +8,7 @@
 #define F_CPU	9600000
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 #include <util/delay.h>
 
 #include "rid.h"
@@ -16,6 +17,10 @@
 //////////////////////////////////////////////////////////////////////////
 // User Config
 //////////////////////////////////////////////////////////////////////////
+
+// enable to calibrate only whe the device is reset via the reset pin. Programming the device with
+// an ISP programmer triggers this reset, so it can be used as a factory calibration.
+#define RID_OPT_CALIBRATE_ON_RESET
 
 // enable raw data output of some internal values for debug
 //#define RID_OPT_DBG_RAW_OUTPUT
@@ -45,6 +50,13 @@ typedef union
 
 
 //////////////////////////////////////////////////////////////////////////
+// Variables
+//////////////////////////////////////////////////////////////////////////
+
+uint16_t EEMEM res_high_eemem;
+
+
+//////////////////////////////////////////////////////////////////////////
 // Function Declarations
 //////////////////////////////////////////////////////////////////////////
 
@@ -58,10 +70,29 @@ static uint16_t adc_get(uint8_t admux, uint8_t pinb);
 
 int main(void)
 {
-	// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
-	uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
-	uint16_t res_high = rid_res_high(adc_ref, RID_REF);
+	uint16_t res_high;
+	adc_get(0b11<<MUX0, 1<<3);	// dummy read
 	
+	#ifdef RID_OPT_CALIBRATE_ON_RESET
+		if (MCUSR & (1<<EXTRF))
+		{
+			uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
+			res_high = rid_res_high(adc_ref, RID_REF);
+			eeprom_update_word (&res_high_eemem,  res_high);
+			
+		}
+		else
+		{
+			res_high = eeprom_read_word(&res_high_eemem);
+		}
+		
+	#else
+		// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
+		uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
+		res_high = rid_res_high(adc_ref, RID_REF);	
+	#endif
+
+
     while (1) 
     {
 		// PB4/ADC2 is continuous sampled input
