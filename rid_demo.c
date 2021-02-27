@@ -20,7 +20,10 @@
 
 // enable to calibrate only whe the device is reset via the reset pin. Programming the device with
 // an ISP programmer triggers this reset, so it can be used as a factory calibration.
-#define RID_OPT_CALIBRATE_ON_RESET
+//#define RID_OPT_CALIBRATE_ON_RESET
+
+// enable to keep the current calibration in eeprom. Can not be combined with RID_OPT_CALIBRATE_ON_RESET
+#define RID_OPT_CALIBRATE_KEEP
 
 // enable raw data output of some internal values for debug
 //#define RID_OPT_DBG_RAW_OUTPUT
@@ -85,6 +88,9 @@ int main(void)
 		{
 			res_high = eeprom_read_word(&res_high_eemem);
 		}
+		
+	#elif defined(RID_OPT_CALIBRATE_KEEP)
+		res_high = eeprom_read_word(&res_high_eemem);
 		
 	#else
 		// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
