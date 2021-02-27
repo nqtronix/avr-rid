@@ -23,7 +23,7 @@
 //#define RID_OPT_CALIBRATE_ON_RESET
 
 // enable to keep the current calibration in eeprom. Can not be combined with RID_OPT_CALIBRATE_ON_RESET
-#define RID_OPT_CALIBRATE_KEEP
+//#define RID_OPT_CALIBRATE_KEEP
 
 // enable raw data output of some internal values for debug
 //#define RID_OPT_DBG_RAW_OUTPUT
@@ -94,7 +94,7 @@ int main(void)
 		
 	#else
 		// PB3/ADC3 is reference input; enable internal pullup and connect external 22k
-		uint16_t adc_ref = adc_get(0b11<<MUX0, 1<<3);
+		uint16_t adc_ref = adc_get(0b01<<MUX0, 1<<2);
 		res_high = rid_res_high(adc_ref, RID_REF);	
 	#endif
 
@@ -102,7 +102,7 @@ int main(void)
     while (1) 
     {
 		// PB4/ADC2 is continuous sampled input
-		uint16_t adc_val = adc_get(0b10<<MUX0, 1<<4);
+		uint16_t adc_val = adc_get(0b11<<MUX0, 1<<3);
 		uint16_t res_low = rid_res_low(adc_val, res_high);
 		
 		rid_e rid = rid_get(res_low);

@@ -18,7 +18,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 // define the external dull-down reference resistor value, scaled to match the LUT
-#define RID_REF_OHM			(22000)
+#define RID_REF_OHM			(24200)
 
 // define the parasitic internal series resistor between ADC input and device output. Set to 0 if
 // an external voltage divider is used (internal pullup disabled).
