@@ -154,6 +154,8 @@ Table of all valid resistor to rid assignments:
 |  31 |    OPEN |
 ```
 
+Further information and logs can be found on [this project's hackaday.io page](https://hackaday.io/project/177591/logs
+
 <br>
 
 ## Under the Hood
@@ -192,6 +194,8 @@ This project uses [**Semantic Versioning 2.0.0**][semver.org]. During initial de
 
 The message of each commit contains detailed information about the changes made. The list below is a summary about all significant improvements.
 
+ - **0.2.0 (latest)** <br>
+	- changed the user config, now an external file can be used
  - **0.1.0** <br>
 	- initial release
 
