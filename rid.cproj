@@ -164,9 +164,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="config\rid_config.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="config\tinyuart_config.h">
       <SubType>compile</SubType>
     </Compile>
